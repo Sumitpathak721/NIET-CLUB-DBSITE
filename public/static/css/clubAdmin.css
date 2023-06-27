@@ -1,0 +1,12 @@
+.clubMember{
+    border:1px solid black;
+    margin:1px 2px;
+    display:flex;
+    flex-direction:column;
+    text-align:center;
+}
+.clubMember img{
+    height:100px;
+    width:100px;
+    border-radius:100%;
+}

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/clubAdmin.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
+<body>
+    <div id="clubDetail">
+        <button onclick="logout()" style="float:right;">Logout</button>
+        <div id="editButton" style="display: flex;">
+            <button onclick="addClubMemberToggle()">+Add Member</button>
+            <button onclick="editClubToggle()">Edit Club</button>
+            <button onclick="addClubEventToggle()">Add Event</button>
+        </div>
+        <div id="Forms" style="display: flex;">
+            <form id="addMemberForm" action="/clubAdmin/addMember" method="PUT" style="display: none;" enctype="multipart/form-data">
+                <input type="text" name="memberID" placeholder="user ERP_ID" onchange="validateClubMember(this.value)"><br>
+                <label for="ERP_ID" id="validateMemberID" style="display: none;"></label>
+                <button type="submit" id="addMemberBtn">+Add Member</button>
+            </form>
+            <form id="editClubForm" action="/clubAdmin/editClub" method="POST"  enctype="multipart/form-data" style="display: none;">
+                <input type="text"  name="name" value="<%=club.name%>" placeholder="name" class="clubName" required><br>
+                <input type="text" name="desc1" value="<%=club.description%>" placeholder="description" class="clubDesc1"><br>
+                <input type="text" name="desc2" value="<%=club.desc2%>" placeholder="description" class="clubDesc2"><br>
+                <div style="text-align: center;">
+                    <img src="<%=club.icon%>" alt="<%=club.name%>" width="100px" height="100px" ><br>
+                    <label for="clubIconInput" style="background-color:rgb(211, 211, 211);border:0.5px solid black;border-radius:3px;padding:3px;">Change<input type="file" id="clubIconInput" name="icon" style="display:none;" accept="image/*" multiple="false"></label>
+                </div>
+                <input type="email" name="Email" value="<%=club.Email[0]%>" placeholder="HelpLine Email" class="clubHelpLineEmail1" required><br>
+                <input type="email" name="Email" value="<%=club.Email[1]%>" placeholder="HelpLine Email" class="clubHelpLineEmail2"><br>
+                <input type="text" name="number" value="<%=club.number[0]%>" placeholder="HelpLine No" class="clubHelpLineNumber1" required><br>
+                <input type="text" name="number" value="<%=club.number[1]%>" placeholder="Another HelpLine No" class="clubHelpLineNumber2"><br>
+                <input type="text" name="whatsapp" value="<%=club.whatsapp%>" placeholder="Whatsapp Group Link" class="clubWhatsapp" required><br>
+                <input type="text" name="ERP_ID" id="adminERP" placeholder="Enter Admin ERP_ID" class="clubAdmin" onchange="checkClubAdmin(this.value)" required><br>
+                <label id="statusAdminValidateForm" for="ERP_ID"></label><br>
+                <button id="editClubBtn">Change</button>
+            </form>
+            <form action="/clubAdmin/addClubEvent" method="POST" id="addClubEventForm"  enctype="multipart/form-data" style="display: none;">
+                <input type="text"  name="eventName" placeholder="Event name" required><br>
+                <input type="text" name="desc" placeholder="Event Description" required><br>
+                <label for="icon">Event Icon:</label>
+                <input type="file" name="eventIcon" required><br>
+                <button>Add Event</button>
+
+            </form>
+        </div>
+        <div id="aboutClub">
+
+            <img src="<%=club.icon%>" alt="Club Icon" id="clubIcon" style="height: 150px;width: 150px;">
+            <h1 id="clubName"><%=club.name%></h1>
+            <div id="clubDesc1"><%=club.description%></div>
+            <div id="clubDesc2"><%=club.desc2%></div>
+            <div>HelpLineNo.</div>
+            <div id="clubHelpLineNumber1"><%=club.number[0]%></div>
+            <div id="clubHelpLineNumber2"><%=club.number[1]%></div>
+            <div>Email US</div>
+            <div id="clubHelpLineEmail1"><%=club.Email[0]%></div>
+            <div id="club HelpLineEmail2"><%=club.Email[1]%></div>
+            <div>Members</div>
+            <div id="clubMembers" style="display:flex;"></div>
+            <div>Events</div>
+            <div id="clubEvents" style="display:flex;"></div>
+        </div>
+    </div>
+</body>
+<!-- Don't disturb arrangement of script  -->
+<script>
+    // Global Scope variable define;
+    window.MAIN_DIR = '<%=MAIN_DIR%>';
+</script>
+<script src="/static/js/clubAdmin.js"></script>
+<script>
+    $(document).ready(async()=>{
+        //setting emailERP in editClub input form
+        let admin = await memberDetailFetch('<%=club.admin%>');
+        $("#adminERP").val(admin.member.ERP_ID);
+        const club = <%- JSON.stringify(club)%>;
+        //fetching all members of club
+        
+        await ShowClubMember(club);
+        await ShowClubEvent(club.events);
+    })
+</script>
+</html>

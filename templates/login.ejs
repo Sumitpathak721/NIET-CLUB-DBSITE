@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Edit you css here -->
+    <link rel="stylesheet" href="/static/css/login.css">
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body onload="onLoad()">
+    <div id="response">
+        <button onclick="removeResponse()">x</button>
+        <div id="responseText"></div>
+    </div>
+    <form method="POST" id="login" onsubmit="login()">
+        <input type="text" name="ERP_ID" placeholder="ERP_ID"><br>
+        <input type="password" name="password" placeholder="password"><br>
+        <button type="submit" >Login</button>
+    </form>
+</body>
+
+<!-- javascript handle here -->
+<script src="/static/js/login.js"></script>
+</html>

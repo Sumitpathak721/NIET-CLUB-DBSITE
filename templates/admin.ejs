@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/css/admin.css">
+    
+</head>
+<style>
+    #clubDetail{
+        display:none;
+    }
+    #editClub{
+        display:flex;
+    }
+    .activeClubBtn{
+        display:none;
+    }
+</style>
+<body">
+    <button style="float: right;" onclick="logout()">Logout</button>
+    <div id="dashboard">
+        <!-- Through indexing you get data of each club in list format, you can display data whatever you wnat-->
+
+        <div>
+            
+            <%for(let i=0;i<clubs.length;i++){%>
+                <button id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
+            <%}%>
+            
+            
+            <form action="./admin/addClub" method="POST" id="addClubForm" class="activeClubBtn" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="name" required><br>
+                <input type="text" name="desc" placeholder="description"><br>
+                <input type="text" name="desc2" placeholder="description"><br>
+                <label for="icon">Icon:</label>
+                <input type="file" name="icon" accept="image/*"><br>
+                <input type="email" name="Email" placeholder="HelpLine Email"  required><br>
+                <input type="email" name="Email" placeholder="HelpLine Email"><br>
+                <input type="text" name="number" placeholder="HelpLine No"  required><br>
+                <input type="text" name="number" placeholder="Another HelpLine No"><br>
+                <input type="text" name="whatsapp" placeholder="Whatsapp Group Link"  required><br>
+                <input type="text" name="ERP_ID" placeholder="Enter club Admin ERP_ID" onchange="checkClubAdmin(this.value,'statusAdminValidate','addClubBtn')" required><br>
+                <label id="statusAdminValidate" for="ERP_ID"></label><br>
+
+                <button id="addClubBtn">Submit</button>
+            </form>
+            <form action="./admin/edit-dsw-video" method="POST" style="margin-top:15px;border-radius:10px;border:1px solid black;padding:5px;" enctype="multipart/form-data">
+                <label for="dsw-video-edit" style="border-radius: 20px;">
+                    <b>Edit DSW video(mp4 only):</b>
+                    <input type="file" id="dsw-video-edit" name="video" accept="video/mp4" >
+                </label>
+                <br>
+                <button type="submit" style="background-color: rgb(23, 225, 23);color:white;padding:10px;border-radius:10px;" >Change</button>
+            </form>
+        </div>
+        <div id="clubLoading"></div>
+        <div id="clubDetail">
+            <div id="editButton" style="display: flex;">
+                <button onclick="addClubMemberToggle()">+Add Member</button>
+                <button onclick="editClubToggle()">Edit Club</button>
+                <button onclick="addClubEventToggle()">Add Event</button>
+            </div>
+            <div id="Forms" style="display: flex;">
+                <form id="addMemberForm" style="display: none;">
+                    <input type="text" name="memberID" placeholder="user ERP_ID" onchange="validateClubMember(this.value)"><br>
+                    <label for="ERP_ID" id="validateMemberID" style="display: none;"></label>
+                    <input type="text" name="clubID" class="clubIDInput" style="display:none">
+                    <button type="submit" id="addMemberBtn" onclick="addMemberForm()">+Add Member</button>
+                </form>
+                <form id="editClubForm" action="/clubAdmin/editClub" method="POST"  enctype="multipart/form-data" style="display: none;">
+                    <input type="text"  name="name" placeholder="name" class="clubName" required><br>
+                    <input type="text" name="desc1" placeholder="description" class="clubDesc1"><br>
+                    <input type="text" name="desc2" placeholder="description" class="clubDesc2"><br>
+                    <div style="text-align: center;">
+                        <img class="clubIcon" alt="clubIcon" width="100px" height="100px" ><br>
+                        <label for="clubIconInput" style="background-color:rgb(211, 211, 211);border:0.5px solid black;border-radius:3px;padding:3px;">Change<input type="file" id="clubIconInput" name="icon" style="display:none;" accept="image/*" multiple="false"></label>
+                    </div>
+                    <input type="email" name="Email" placeholder="HelpLine Email" class="clubHelpLineEmail1" required><br>
+                    <input type="email" name="Email" placeholder="HelpLine Email" class="clubHelpLineEmail2"><br>
+                    <input type="text" name="number" placeholder="HelpLine No" class="clubHelpLineNumber1" required><br>
+                    <input type="text" name="number" placeholder="Another HelpLine No" class="clubHelpLineNumber2"><br>
+                    <input type="text" name="whatsapp" placeholder="Whatsapp Group Link" class="clubWhatsapp" required><br>
+                    <input type="text" style="display: none;" class="clubIDInput" name="clubID">
+                    <input type="text" name="ERP_ID" placeholder="Enter Admin ERP_ID" class="clubAdmin" onchange="checkClubAdmin(this.value)" required><br>
+                    <label id="statusAdminValidateForm" for="ERP_ID"></label><br>
+                    <button id="editClubBtn">Change</button>
+                </form>
+                <form action="/clubAdmin/addClubEvent" method="POST" id="addClubEventForm"  enctype="multipart/form-data" style="display: none;">
+                    <input type="text" name="clubID" class="clubIDInput" style="display:none">
+                    <input type="text"  name="eventName" placeholder="Event name" required><br>
+                    <input type="text" name="desc" placeholder="Event Description" required><br>
+                    <label for="icon">Event Icon:</label>
+                    <input type="file" name="eventIcon" required><br>
+                    <button>Add Event</button>
+
+                </form>
+            </div>
+            <div id="aboutClub">
+
+                <img src="" alt="Club Icon" class="clubIcon" style="height: 150px;width: 150px;">
+                <h1 id="clubName"></h1>
+                <div id="clubDesc1"></div>
+                <div id="clubDesc2"></div>
+                <div id="clubGroup"></div>
+                <div>HelpLineNo.</div>
+                <div id="clubHelpLineNumber1"></div>
+                <div id="clubHelpLineNumber2"></div>
+                <div>Email US</div>
+                <div id="clubHelpLineEmail1"></div>
+                <div id="club HelpLineEmail2"></div>
+                <div>Members</div>
+                <div id="clubMembers" style="display:flex;"></div>
+                <div>Events</div>
+                <div id="clubEvents" style="display:flex;"></div>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script>
+    // Global Scope declear
+    window.MAIN_DIR = '<%=MAIN_DIR%>';
+</script>
+<script src="/static/js/admin.js"></script>
+</html>

@@ -1,0 +1,44 @@
+body{
+    margin-top:18%;
+}
+#response{
+    display:none;
+    margin:auto;
+    margin-bottom:10px;
+    width:23%;
+    background-color: rgb(255, 203, 203);
+    border-radius:20px;
+    padding:5px;
+}
+#response button{
+    border:0px;
+    font-size:30px;
+    padding:auto 10px;
+    padding-right:20px;
+    background-color: transparent;
+    color:red;
+    font-family: sans-serif;
+}
+#responseText{
+    display: inline;
+    font-size: 24px;
+    font-family: sans-serif;
+    color: #ef0808;
+}
+
+#login{
+    font-size: 25px;
+    padding:15px;
+    margin:auto;
+    text-align:center;
+    border:3px solid green;
+    border-radius: 20px;
+    width:fit-content;
+}
+#login input{
+    padding:10px;
+    font-size: 20px;
+    margin:5px;
+    border-radius:20px;
+    border:1px solid rgb(143, 143, 143);
+}
