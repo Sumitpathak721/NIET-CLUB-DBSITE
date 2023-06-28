@@ -27,13 +27,18 @@ const verifyToken = async(req, res, next) => {
       req.body.validation = {verify:false};
     }else{
         try{
-            let user =await jwt.decode(token, process.env.JWT_SECRET_TOKEN);
-            
-            req.body.validation = {
-                user:user,
-                verified:true
-            };
-            
+            jwt.verify(token, process.env.JWT_SECRET_TOKEN,(err,decode)=>{
+                if(err){
+                    console.log("Verification failed:",err.message);
+                    req.body.validation = {verify:false};
+                }else{
+                    user = jwt.decode(token, process.env.JWT_SECRET_TOKEN);
+                    req.body.validation = {
+                        user:user,
+                        verified:true
+                    };
+                }
+            });
         }catch(e){
             
             req.body.validation = {verified:false};
