@@ -20,7 +20,8 @@ const clubSchema = mongoose.Schema({
         {
             eventName:String,
             eventDesc:String,
-            eventIcon:String
+            eventIcon:String,
+            eventDate:String,
         }
     ],
     admin:{type:Schema.Types.ObjectId,ref:'user'},

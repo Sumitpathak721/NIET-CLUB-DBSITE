@@ -88,7 +88,7 @@ const ShowClubEvent = async (events) => {
         $("#clubEvents").append(`
         <div style='border:1px solid black;margin:1px 2px;display:flex;flex-direction:column;text-align:center;'>
             <img src='${events[i].eventIcon}' alt='${events[i].eventName}' style='height:100px;width:100px;border-radius:100%;'>
-            <p>${events[i].eventName}</p>
+            <p>${events[i].eventName}<br>${events[i].eventDate}</p>
             <button onclick='deleteEvent("${events[i].eventName}")'>Delete Event</button>
         </div>
         `)

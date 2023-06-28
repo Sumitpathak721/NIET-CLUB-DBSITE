@@ -40,8 +40,9 @@
             <form action="/clubAdmin/addClubEvent" method="POST" id="addClubEventForm"  enctype="multipart/form-data" style="display: none;">
                 <input type="text"  name="eventName" placeholder="Event name" required><br>
                 <input type="text" name="desc" placeholder="Event Description" required><br>
+                <input type="text" name="date" placeholder="Event organized date" required><br>
                 <label for="icon">Event Icon:</label>
-                <input type="file" name="eventIcon" required><br>
+                <input type="file" name="eventIcon" required accept="image/*" multiple="false"><br>
                 <button>Add Event</button>
 
             </form>

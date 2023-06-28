@@ -200,7 +200,8 @@ route.post("/addClubEvent",upload.single("eventIcon"),verifyToken,async(req,res)
             let event = {
                 eventName:req.body.eventName,
                 eventDesc:req.body.desc,
-                eventIcon:"/dynamic/images/"+req.file.filename
+                eventIcon:"/dynamic/images/"+req.file.filename,
+                eventDate:req.body.date,
             };
             club.events.push(event);
             await club.save();
