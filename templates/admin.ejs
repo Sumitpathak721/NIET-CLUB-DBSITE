@@ -30,6 +30,7 @@
             <%for(let i=0;i<clubs.length;i++){%>
                 <button id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
             <%}%>
+            <button onclick="newClubBtn()">+Add Club</button>
             
             
             <form action="./admin/addClub" method="POST" id="addClubForm" class="activeClubBtn" enctype="multipart/form-data">

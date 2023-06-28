@@ -98,7 +98,7 @@ route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxC
 //-----------Edit DSW club video API Start-----------
 
 route.post("/edit-dsw-video",upload.fields([{name:"video",maxCount:1}]),async(req,res)=>{
-    res.redirect("/admin");
+    res.redirect("/dashboard");
 });
 //------------Edit DSW club video api End -----------
 
