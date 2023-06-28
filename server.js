@@ -16,7 +16,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
 var templatesLoc = path.join(__dirname,"templates");
-var publicLoc  =  path.join(__dirname,"/public");
 
 
 const verifyToken = async(req, res, next) => {
