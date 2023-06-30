@@ -20,12 +20,12 @@ p {
   
   after { clear: both; }
   
-#login {
+#login form {
     margin: 50px auto;
     width: 320px;
   }
   
-#login form {
+#login  {
     margin: auto;
     padding: 30px;
     border-radius: 10px;
