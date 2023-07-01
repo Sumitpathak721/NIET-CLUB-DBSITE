@@ -2,6 +2,7 @@ const express = require("express");
 const {templatesLoc,verifyToken} = require("../server.js")
 require("../db/config.js");
 const clubModel = require("../db/clubs.js")
+const eventModel = require("../db/events.js")
 const route=express()
 
 route.get("/",async(req,res)=>{
@@ -22,6 +23,11 @@ route.get("/getAccessData",verifyToken,async(req,res)=>{
     }else{
         res.sendStatus(404);
     }
+});
+route.get("/getEvent",async(req,res)=>{
+    console.log("got called");
+    let event = await eventModel.findOne({_id:req.query.clubID});
+    res.send(event);
 });
 
 module.exports = route;

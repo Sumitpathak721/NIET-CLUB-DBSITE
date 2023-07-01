@@ -85,11 +85,13 @@ const deleteMember = async (ERP_ID) => {
 const ShowClubEvent = async (events) => {
     $("#clubEvents").html("");
     for (let i = 0; i < events.length; i++) {
+        let response = await fetch(`/dashboard/getEvent?clubID=${events[i]}`);
+        response = await response.json();
         $("#clubEvents").append(`
         <div style='border:1px solid black;margin:1px 2px;display:flex;flex-direction:column;text-align:center;'>
-            <img src='${events[i].eventIcon}' alt='${events[i].eventName}' style='height:100px;width:100px;border-radius:100%;'>
-            <p>${events[i].eventName}<br>${events[i].eventDate}</p>
-            <button onclick='deleteEvent("${events[i].eventName}")'>Delete Event</button>
+            <img src='${response.icon}' alt='${response.Name}' style='height:100px;width:100px;border-radius:100%;'>
+            <p>${response.Name}<br>${response.Date}</p>
+            <button onclick='deleteEvent("${response.Name}","${document.getElementById('clubName').innerHTML}")'>Delete Event</button>
         </div>
         `)
     }

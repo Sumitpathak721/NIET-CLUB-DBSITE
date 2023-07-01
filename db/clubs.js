@@ -17,13 +17,8 @@ const clubSchema = mongoose.Schema({
         }
     ],
     events:[
-        {
-            eventName:String,
-            eventDesc:String,
-            eventIcon:String,
-            eventDate:String,
-        }
+        {type:Schema.Types.ObjectId,ref:'events'}
     ],
-    admin:{type:Schema.Types.ObjectId,ref:'user'},
+    admin:{type:Schema.Types.ObjectId,ref:'users'},
 })
 module.exports = mongoose.model('clubs',clubSchema);

@@ -7,6 +7,7 @@ let {templatesLoc,verifyToken}  = require("../server");
 require("../db/config.js");
 const userModel = require("../db/users");
 const clubModel = require("../db/clubs");
+const eventModel = require("../db/events");
 const path = require("path");
 
 route.post("/checkclubAdmin",async(req,res)=>{
@@ -197,13 +198,15 @@ route.post("/addClubEvent",upload.single("eventIcon"),verifyToken,async(req,res)
             club = await clubModel.findOne({_id:admin.AccessID});
         }
         if(club){
-            let event = {
-                eventName:req.body.eventName,
-                eventDesc:req.body.desc,
-                eventIcon:"/dynamic/images/"+req.file.filename,
-                eventDate:req.body.date,
-            };
-            club.events.push(event);
+            let newEvent = new eventModel({
+                Name:req.body.eventName,
+                Desc:req.body.desc,
+                icon:"/dynamic/images/"+req.file.filename,  
+                clubName:club.name,
+                Date:req.body.date,
+            });
+            await newEvent.save();
+            club.events.push(newEvent._id);
             await club.save();
             res.send({status:"ok"});
         }else{
@@ -220,21 +223,25 @@ route.put("/deleteEvent",verifyToken,async(req,res)=>{
     let {user} = req.body.validation;
     if(user){
         let club;
+        let event;
         if(user.Access=="admin" && req.body.clubName){
             club = await clubModel.findOne({name:req.body.clubName});
+            event = await eventModel.findOne({Name:req.body.eventName,clubName:req.body.clubName});
         }else if(user.Access=="clubAdmin"){
             club = await clubModel.findOne({_id:user.AccessID});
+            event = await eventModel.findOne({Name:req.body.eventName,clubName:club.name});
         }
         if(club){
-            if(req.body.eventName){
+            if(event){
                 for(let i=0;i<club.events.length;i++){
-                    if(club.events[i].eventName==req.body.eventName){
-                        fs.unlink(""+path.join("public",club.events[i].eventIcon),(e)=>{
+                    if(`${club.events[i]}`== `${event._id}`){
+                        fs.unlink(""+path.join("public",event.icon),(e)=>{
                             if(e){
                                 console.log("File Deletion error:",e)
                                 return;
                             }
                         });
+                        await eventModel.deleteOne({_id:club.events[i]});
                         club.events.splice(i,1);
                         await club.save()
                         res.send({status:"ok"});
@@ -243,7 +250,7 @@ route.put("/deleteEvent",verifyToken,async(req,res)=>{
                 }
                 res.send({status:"Event Not found!!"})
             }else{
-                res.send({status:"user not exist"})
+                res.send({status:"Event not exist"})
             }
         }else{
             res.send({status:"Access Denied"})
