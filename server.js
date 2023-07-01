@@ -24,6 +24,7 @@ const verifyToken = async(req, res, next) => {
     // Check if the token exists
     if (!token) {
       req.body.validation = {verify:false};
+      res.sendStatus(401);
     }else{
         try{
             jwt.verify(token, process.env.JWT_SECRET_TOKEN,(err,decode)=>{
@@ -41,6 +42,7 @@ const verifyToken = async(req, res, next) => {
         }catch(e){
             
             req.body.validation = {verified:false};
+            res.sendStatus(401);
         }
     next();
   };

@@ -118,8 +118,8 @@ const ShowClubMember = async (club) => {
         if (res.status == "ok") {
             let clubMember = document.getElementById("clubMembers");
             clubMember.innerHTML += `
-            <div style='border:1px solid black;margin:1px 2px;display:flex;flex-direction:column;text-align:center;'>
-                <img src='${window.MAIN_DIR+res.member.avatar}' alt='${res.member.name}' style='height:100px;width:100px;border-radius:100%;'>
+            <div class='clubMember'>
+                <img src='${window.MAIN_DIR+res.member.avatar}' alt='${res.member.name}'>
                 <a href='http://localhost:3000/profile/${res.member.ERP_ID}'>${res.member.name}</a>
                 <button onclick='deleteMember("${res.member.ERP_ID}","${club._id}")'>Delete Member</button>
             </div>
@@ -137,8 +137,8 @@ const ShowClubEvent = async (events) => {
         response = await response.json();
         console.log(response);
         $("#clubEvents").append(`
-        <div style='border:1px solid black;margin:1px 2px;display:flex;flex-direction:column;text-align:center;'>
-            <img src='${response.icon}' alt='${response.Name}' style='height:100px;width:100px;border-radius:100%;'>
+        <div class='clubEvent'>
+            <img src='${response.icon}' alt='${response.Name}'>
             <p>${response.Name}<br>${response.Date}</p>
             <button onclick='deleteEvent("${response.Name}","${document.getElementById('clubName').innerHTML}")'>Delete Event</button>
         </div>
@@ -298,6 +298,13 @@ let addMemberForm = async () => {
         alert(res.status);
     }
 }
+let editDSWInfoBtn = async() =>{
+    if($("#editDSWInfoForm").css("display")=='none'){
+        $("#editDSWInfoForm").css("display","block");
+    }else{
+        $("#editDSWInfoForm").css("display","none");
+    }
+}
 
 $("#addMemberForm").on("submit", function (e) {
     e.preventDefault();
@@ -366,4 +373,43 @@ addClubEventForm.addEventListener("submit", async (e) => {
     } else {
         alert(response.status);
     }
+});
+var editDSWInfoForm = document.getElementById("editDSWInfoForm");
+editDSWInfoForm.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    var formData = new FormData(editDSWInfoForm);
+    // Set the desired headers
+    var headers = new Headers();
+    headers.append("Authorization", localStorage.getItem("token"));
+    headers.append("Custom-Header", "custom-value");
+    let response = await fetch(editDSWInfoForm.action, {
+        method: "PUT",
+        headers: headers,
+        body: formData
+    });
+    response = await response.json();
+    if (response.status == "ok") {
+        window.location.reload()
+    } else {
+        alert(response.status);
+    }
+})
+var sentMessage = document.getElementById("sent-message");
+sentMessage.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    var jsonData = {};
+    for (const [key, value] of (new FormData(sentMessage)).entries()) {
+        jsonData[key] = value;
+    }
+    // Set the desired headers
+    var headers = new Headers();
+    headers.append("Authorization", localStorage.getItem("token"));
+    headers.append("Content-Type", "application/json");
+    let response = await fetch(sentMessage.action, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify(jsonData)
+    });
+    response = await response.json();
+    alert(response.status);
 });

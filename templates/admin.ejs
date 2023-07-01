@@ -26,37 +26,58 @@
         <!-- Through indexing you get data of each club in list format, you can display data whatever you wnat-->
 
         <div>
-            
             <%for(let i=0;i<clubs.length;i++){%>
-                <button id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
+                <button class="clubs" id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
             <%}%>
-            <button onclick="newClubBtn()">+Add Club</button>
-            
-            
-            <form action="./admin/addClub" method="POST" id="addClubForm" class="activeClubBtn" enctype="multipart/form-data">
-                <input type="text" name="name" placeholder="name" required><br>
-                <input type="text" name="desc" placeholder="description"><br>
-                <input type="text" name="desc2" placeholder="description"><br>
-                <label for="icon">Icon:</label>
-                <input type="file" name="icon" accept="image/*"><br>
-                <input type="email" name="Email" placeholder="HelpLine Email"  required><br>
-                <input type="email" name="Email" placeholder="HelpLine Email"><br>
-                <input type="text" name="number" placeholder="HelpLine No"  required><br>
-                <input type="text" name="number" placeholder="Another HelpLine No"><br>
-                <input type="text" name="whatsapp" placeholder="Whatsapp Group Link"  required><br>
-                <input type="text" name="ERP_ID" placeholder="Enter club Admin ERP_ID" onchange="checkClubAdmin(this.value,'statusAdminValidate','addClubBtn')" required><br>
-                <label id="statusAdminValidate" for="ERP_ID"></label><br>
+            <button onclick="newClubBtn()">+Add Club</button><br>         
+            <button onclick="editDSWInfoBtn()">+Edit DSW Info</button><br>
 
-                <button id="addClubBtn">Submit</button>
-            </form>
-            <form action="./admin/edit-dsw-video" method="POST" style="margin-top:15px;border-radius:10px;border:1px solid black;padding:5px;" enctype="multipart/form-data">
-                <label for="dsw-video-edit" style="border-radius: 20px;">
-                    <b>Edit DSW video(mp4 only):</b>
-                    <input type="file" id="dsw-video-edit" name="video" accept="video/mp4" >
-                </label>
-                <br>
-                <button type="submit" style="background-color: rgb(23, 225, 23);color:white;padding:10px;border-radius:10px;" >Change</button>
-            </form>
+            <div style="display: flex;">
+                <!-- Add club form -->
+                <form action="./admin/addClub" method="POST" id="addClubForm" class="activeClubBtn" enctype="multipart/form-data">
+                    <input type="text" name="name" placeholder="name" required><br>
+                    <input type="text" name="desc" placeholder="description"><br>
+                    <input type="text" name="desc2" placeholder="description"><br>
+                    <label for="icon">Icon:</label>
+                    <input type="file" name="icon" accept="image/*"><br>
+                    <input type="email" name="Email" placeholder="HelpLine Email"  required><br>
+                    <input type="email" name="Email" placeholder="HelpLine Email"><br>
+                    <input type="text" name="number" placeholder="HelpLine No"  required><br>
+                    <input type="text" name="number" placeholder="Another HelpLine No"><br>
+                    <input type="text" name="whatsapp" placeholder="Whatsapp Group Link"  required><br>
+                    <input type="text" name="ERP_ID" placeholder="Enter club Admin ERP_ID" onchange="checkClubAdmin(this.value,'statusAdminValidate','addClubBtn')" required><br>
+                    <label id="statusAdminValidate" for="ERP_ID"></label><br>
+
+                    <button id="addClubBtn">Submit</button>
+                </form>
+
+                <!-- DSW info edit form -->
+                <form action="./admin/edit-dsw-info" id="editDSWInfoForm" style="display:none;">
+                    <input type="text" name="desc1" value="<%=main.desc1%>" id="dsw-desc1-input" placeholder="description 1"><br>
+                    <input type="text" name="desc2" value="<%=main.desc2%>" id="dsw-desc2-input" placeholder="description 2"><br>
+                    <input type="email" name="email1" value="<%=main.email[0]%>" id="dsw-email1-input" placeholder="Help line email1"><br>
+                    <input type="email" name="email2" value="<%=main.email[1]%>" id="dsw-email2-input" placeholder="Help line email2"><br>
+                    <input type="number" name="helplineNo1" value="<%=main.helplineNo[0]%>" id="dsw-number1-input" placeholder="Helpline number"><br>
+                    <input type="number" name="helplineNo2" value="<%=main.helplineNo[1]%>" id="dsw-number2-input" placeholder="Help line number"><br>
+                    <label for="dsw-video-edit" style="border-radius: 20px;">
+                        <b>Edit DSW icon(PNG only):</b>
+                        <input type="file" id="dsw-icon-edit" name="DSWIcon" accept="image/png" multiple="false">
+                    </label><br>
+                    <label for="dsw-video-edit" style="border-radius: 20px;">
+                        <b>Edit DSW video(mp4 only):</b>
+                        <input type="file" id="dsw-video-edit" name="video" accept="video/mp4" multiple="false">
+                    </label><br>
+                    <button type="submit" style="background-color: rgb(23, 225, 23);color:white;padding:10px;border-radius:10px;" >Change</button>
+                </form>
+            </div>
+            <div id="message-container">
+                <h3 id="message-heading">Send Message to Community</h3>
+                <form action="./admin/sent-message" method="POST" id="sent-message">
+                    <input name="title" placeholder="Enter Title" required></input><br>
+                    <textarea name="message" placeholder="Type you messgae" required style="resize: none;"></textarea><br>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
         </div>
         <div id="clubLoading"></div>
         <div id="clubDetail">
@@ -115,7 +136,7 @@
                 <div id="clubHelpLineEmail1"></div>
                 <div id="club HelpLineEmail2"></div>
                 <div>Members</div>
-                <div id="clubMembers" style="display:flex;"></div>
+                <div id="clubMembers"style="display:flex;"></div>
                 <div>Events</div>
                 <div id="clubEvents" style="display:flex;"></div>
             </div>
