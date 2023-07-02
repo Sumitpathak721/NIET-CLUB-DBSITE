@@ -37,6 +37,18 @@ route.post("/clubDetail",verifyToken,async(req,res)=>{
         res.send({status:"Access Denied"})
     }
 })
+route.get("/isvalidClub",async(req,res)=>{
+    if(req.query.clubName){
+        let club = await clubModel.findOne({name:req.query.clubName});
+        if(club){
+            res.send({status:200});
+        }else{
+            res.send({status:404});
+        }
+    }else{
+        res.send({status:404});
+    }
+});
 route.post("/getMemberDetail",verifyToken,async(req,res)=>{
     //validate admin or clubAdmin
     let {user} = req.body.validation;

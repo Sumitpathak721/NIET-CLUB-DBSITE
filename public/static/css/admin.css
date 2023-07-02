@@ -53,3 +53,9 @@
     background-color: rgb(42, 7, 140);
     color:white;
 }
+#coty{
+    border:1px solid blue;
+    width:fit-content;
+    margin:10px 0px;
+    padding:10px;
+}

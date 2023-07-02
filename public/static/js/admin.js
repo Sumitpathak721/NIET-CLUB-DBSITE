@@ -305,6 +305,22 @@ let editDSWInfoBtn = async() =>{
         $("#editDSWInfoForm").css("display","none");
     }
 }
+let checkClub = async(clubName)=>{
+    $("#coty-response").text("Loading...");
+    $("#coty-btn").attr("disabled",true);
+    let response = await fetch("./clubAdmin/isvalidClub?clubName="+clubName);
+    response = await response.json();
+    if(response.status==200){
+        $("#coty-response").text("verified Club :)")
+        $("#coty-response").css("color","green");
+        $("#coty-btn").attr("disabled",false);
+    }else{
+        $("#coty-response").text("Club Not exist :(")
+        $("#coty-response").css("color","red");
+    }
+}
+
+
 
 $("#addMemberForm").on("submit", function (e) {
     e.preventDefault();
@@ -412,4 +428,28 @@ sentMessage.addEventListener("submit",async(e)=>{
     });
     response = await response.json();
     alert(response.status);
+});
+var updateCotyForm = document.getElementById("updateCotyForm");
+updateCotyForm.addEventListener("submit",async(e)=>{
+    console.log("got called");
+    e.preventDefault();
+    let formData = new FormData(updateCotyForm);
+    let response = await fetch(updateCotyForm.action, {
+        method: "POST",
+        headers: {
+            "Content-Type":"application/json",
+            "Authorization":localStorage.getItem("token")
+        },
+        body: JSON.stringify({
+            clubName:formData.get("clubName")
+        })
+    });
+    response = await response.json();
+    if(response.status==200){
+        alert("successfull Updated")
+    }else if(response.status==404){
+        alert("Club not exist");
+    }else{
+        alert("Unauthorized access");
+    }
 });

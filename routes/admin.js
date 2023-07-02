@@ -164,5 +164,21 @@ route.post("/sent-message",verifyToken,async(req,res)=>{
     }
 });
 
+route.post("/update-coty",verifyToken,async(req,res)=>{
+    let {user} = req.body.validation;
+    if(user && user.Access=="admin"){
+        let club = await  clubModel.findOne({name:req.body.clubName});
+        if(club){
+            let data = await mainModel.findOne({});
+            data.clubOftheYear = club._id;
+            await data.save();
+            res.send({status:200});
+        }else{
+            res.send({status:404});
+        }
+    }else{
+        res.send({status:401});
+    }
+});
 
 module.exports = route;

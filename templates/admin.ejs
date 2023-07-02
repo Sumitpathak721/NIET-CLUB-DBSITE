@@ -78,6 +78,14 @@
                     <button type="submit">Send</button>
                 </form>
             </div>
+            <div id="coty">
+                <h3 id="message-heading">Update Club of the year</h3>
+                <form action="./admin/update-coty" method="POST" id="updateCotyForm">
+                    <input name="clubName" placeholder="Enter ClubName" onchange="checkClub(this.value)" id="coty-validate-club" required></input><br>
+                    <div id="coty-response"></div>
+                    <button type="submit" id="coty-btn">Update</button>
+                </form>
+            </div>
         </div>
         <div id="clubLoading"></div>
         <div id="clubDetail">
