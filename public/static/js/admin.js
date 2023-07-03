@@ -24,12 +24,10 @@ const setClubDetail = async (value) => {
         document.querySelectorAll(".clubIDInput").forEach(clubAdmin => {
             clubAdmin.value = club.club._id;
         })
-        // console.log(club);
         $(".clubIcon").each(function(){
             $(this).attr("src",club.club.icon);
         })
         
-        // attr("src", club.club.icon);
         $("#clubName").html(club.club.name)
         let clubNames = document.querySelectorAll(".clubName");
 
@@ -135,7 +133,6 @@ const ShowClubEvent = async (events) => {
     for (let i = 0; i < events.length; i++) {
         let response = await fetch(`/dashboard/getEvent?clubID=${events[i]}`);
         response = await response.json();
-        console.log(response);
         $("#clubEvents").append(`
         <div class='clubEvent'>
             <img src='${response.icon}' alt='${response.Name}'>
@@ -431,7 +428,6 @@ sentMessage.addEventListener("submit",async(e)=>{
 });
 var updateCotyForm = document.getElementById("updateCotyForm");
 updateCotyForm.addEventListener("submit",async(e)=>{
-    console.log("got called");
     e.preventDefault();
     let formData = new FormData(updateCotyForm);
     let response = await fetch(updateCotyForm.action, {

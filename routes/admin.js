@@ -107,11 +107,8 @@ route.put("/edit-dsw-info",upload.fields([{name:"DSWIcon",maxCount:1},{name:"vid
         main.helplineNo=[req.body.helplineNo1,req.body.helplineNo1];
         main.email=[req.body.email1,req.body.email2]
         if(req.files.DSWIcon){
-            console.log(path.join("public",main.icon));
             fs.unlink(`${path.join("public",main.icon)}`,(e)=>{
-                console.log("i am here");
                 if(e){
-                    console.log("error got called");
                     console.log("File Deletion error:",e)
                     return;
                 }
@@ -120,9 +117,7 @@ route.put("/edit-dsw-info",upload.fields([{name:"DSWIcon",maxCount:1},{name:"vid
         }
         if(req.files.video){
             fs.unlink(`${path.join("public",main.video)}`,(e)=>{
-                console.log("i am here");
                 if(e){
-                    console.log("error got called");
                     console.log("File Deletion error:",e)
                     return;
                 }

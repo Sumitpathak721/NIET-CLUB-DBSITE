@@ -64,7 +64,6 @@ route.post("/getMemberDetail",verifyToken,async(req,res)=>{
     }
 })
 route.put("/addMember",verifyToken,async(req,res)=>{
-    console.log(req.body);
     let {user} = req.body.validation;
         if(user){
             let club;

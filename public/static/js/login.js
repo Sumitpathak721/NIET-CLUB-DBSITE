@@ -41,7 +41,6 @@ const login = async()=>{
             }
         });
         response = await response.json();
-        console.log(response);
         if(response.status==404){
             $("#response").css("display" , "block");
             $("#responseText").text("Invalid Credential");
@@ -50,7 +49,6 @@ const login = async()=>{
             $("#responseText").text("Unauthorized access");
         }else{
             localStorage.setItem("token",response.respond.token);
-            console.log("got called");
             window.location.replace("/dashboard");
         }
 }

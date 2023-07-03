@@ -27,7 +27,6 @@ route.get("/getAccessData",verifyToken,async(req,res)=>{
     }
 });
 route.get("/getEvent",async(req,res)=>{
-    console.log("got called");
     let event = await eventModel.findOne({_id:req.query.clubID});
     res.send(event);
 });
