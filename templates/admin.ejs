@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <link rel="stylesheet" href="/static/css/admin.css">
+    <link rel="stylesheet" href="/public/static/css/admin.css">
     
 </head>
 <style>
@@ -20,15 +20,16 @@
         display:none;
     }
 </style>
-<body">
-    <button style="float: right;" onclick="logout()">Logout</button>
-    <div id="dashboard">
+<body style="display: flex; align-items:center; justify-content:center ">
+    
+    <div id="dashboard" class="login-page">
         <!-- Through indexing you get data of each club in list format, you can display data whatever you wnat-->
 
-        <div>
+        <div class="form">
             <%for(let i=0;i<clubs.length;i++){%>
                 <button class="clubs" id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
             <%}%>
+            <button style="float: right;" onclick="logout()">Logout</button><br>
             <button onclick="newClubBtn()">+Add Club</button><br>         
             <button onclick="editDSWInfoBtn()">+Edit DSW Info</button><br>
 
@@ -156,5 +157,5 @@
     // Global Scope declear
     window.MAIN_DIR = '<%=MAIN_DIR%>';
 </script>
-<script src="/static/js/admin.js"></script>
+<script src="/public/static/js/admin.js"></script>
 </html>
