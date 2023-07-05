@@ -27,6 +27,7 @@
         <!-- Through indexing you get data of each club in list format, you can display data whatever you wnat-->
 
         <div class="form">
+            <h2>Admin Page</h2>
             <%for(let i=0;i<clubs.length;i++){%>
                 <button class="clubs" id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
             <%}%>
