@@ -2,7 +2,7 @@
 
 body{
   height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   font-family: "Poppins";
   background: lightblue;
 }
