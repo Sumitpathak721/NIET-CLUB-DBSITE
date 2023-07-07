@@ -35,14 +35,14 @@ body{
     margin: 0 0 15px;
     padding: 15px;
     box-sizing: border-box;
-    font-size: 10px;
+    font-size: 15px;
     
   }
 .form button {
     font-family: "Poppins", sans-serif;
     text-transform: uppercase;
     outline: 0;
-    background: #234666;
+    background: #0c787d;
     width: 100%;
     border: 5;
     padding: 10px;
