@@ -27,7 +27,7 @@ route.post("/clubDetail",verifyToken,async(req,res)=>{
     let club;
     let {user} = req.body.validation;
     if(user && user.Access=="admin" && req.body.clubName){
-        club = await clubModel.findOne({name:req.body.clubName});
+        club = await clubModel.findOne({name:req.body.clubName}).select(["-_id"]);
     }else if(user && user.Access=="clubAdmin"){
         club = await clubModel.findOne({_id:user.AccessID}).select(["-_id"]);
     }
@@ -64,7 +64,6 @@ route.post("/getMemberDetail",verifyToken,async(req,res)=>{
     }
 })
 route.put("/addMember",verifyToken,async(req,res)=>{
-    console.log(req.body);
     let {user} = req.body.validation;
         if(user){
             let club;
