@@ -65,6 +65,7 @@ body{
     -webkit-transition: all 0.3 ease;
     transition: all 0.3 ease;
     cursor: pointer;
+    margin: 2%;
   }
 .form button:hover,.form button:active,.form button:focus {
     background: #0e2941;
@@ -96,4 +97,5 @@ body{
     -webkit-transition: all 0.3 ease;
     transition: all 0.3 ease;
     cursor: pointer;
+    margin-top: 2%;
   }
