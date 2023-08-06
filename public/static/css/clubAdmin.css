@@ -81,3 +81,19 @@ body{
 .form .register-form {
     display: none;
   }
+
+  .btn1 {
+    font-family: "Poppins", sans-serif;
+    text-transform: uppercase;
+    outline: 0;
+    background: #234666;
+    width: 8%;
+    border: 5;
+    padding: 10px;
+    color: #FFFFFF;
+    border-radius: 25px;
+    font-size: 10px;
+    -webkit-transition: all 0.3 ease;
+    transition: all 0.3 ease;
+    cursor: pointer;
+  }
