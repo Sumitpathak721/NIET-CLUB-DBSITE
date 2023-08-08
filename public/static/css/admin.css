@@ -87,13 +87,13 @@ body{
     cursor: pointer;
     margin-top: 2%;
   }
-  
+
   .btn2 {
     font-family: "Poppins", sans-serif;
     text-transform: uppercase;
     outline: 0;
     background: #234666;
-    width: 8%;
+    width: 50%;
     border: 5;
     padding: 10px;
     color: #FFFFFF;
