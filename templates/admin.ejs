@@ -32,8 +32,9 @@
                 <button class="clubs" id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
             <%}%>
       
-            <button onclick="newClubBtn()">+Add Club</button><br>         
-            <button onclick="editDSWInfoBtn()">+Edit DSW Info</button><br>
+            <button onclick="newClubBtn()" style="float: inline-end;" class="btn2">+Add Club</button>          
+            <button onclick="editDSWInfoBtn()" style="float: inline-end;" class="btn2">+Edit DSW Info</button>
+            
 
             <div style="display: flex;">
                 <!-- Add club form -->
