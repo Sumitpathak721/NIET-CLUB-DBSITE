@@ -25,15 +25,16 @@
     <button onclick="logout()" style="float: right;" class="btn1">Logout</button>
     <div id="dashboard" class="login-page">
         <!-- Through indexing you get data of each club in list format, you can display data whatever you wnat-->
-
+        <button onclick="newClubBtn()" style="float: inline-start;" class="btn2">+Add Club</button>          
+        <button onclick="editDSWInfoBtn()" style="float: left;" class="btn2">+Edit DSW Info</button>  
         <div class="form">
             <h2>Admin Page</h2>
             <%for(let i=0;i<clubs.length;i++){%>
                 <button class="clubs" id='<%=clubs[i].name%>' value="<%=clubs[i].name%>" onclick="setClubDetail(this.value)"><%=clubs[i].name%></button><br>
             <%}%>
       
-            <button onclick="newClubBtn()" style="float: inline-start;" class="btn2">+Add Club</button>          
-            <button onclick="editDSWInfoBtn()" style="float: left;" class="btn2">+Edit DSW Info</button>
+        <!----   <button onclick="newClubBtn()" style="float: inline-start;" class="btn2">+Add Club</button>          
+            <button onclick="editDSWInfoBtn()" style="float: left;" class="btn2">+Edit DSW Info</button> -->
             
 
             <div style="display: flex;">
