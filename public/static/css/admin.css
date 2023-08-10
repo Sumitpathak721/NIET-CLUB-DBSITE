@@ -109,9 +109,8 @@ body{
     width:100px;
     border-radius:100%;
 }
-
+*/
 #message-container{
-    border:1px solid rgb(135, 135, 255);
     width:fit-content;
     padding:10px;
 }
@@ -121,11 +120,18 @@ body{
     padding:5px;
     margin-bottom: 3px;
 }
+#message-container .filter{
+  text-align:left;
+}
+#message-container .filter option{
+  font-size:15px;
+}
 #message-container textarea{
     width:300px;
     height:100px;
     font-size:17px;
     padding:5px;
+    outline:none;
 }
 #message-container button{
     border-radius:20px;
@@ -139,7 +145,7 @@ body{
     transition-duration: 0.3s;
     background-color: rgb(42, 7, 140);
     color:white;
-}
+}/*
 #coty{
     border:1px solid blue;
     width:fit-content;

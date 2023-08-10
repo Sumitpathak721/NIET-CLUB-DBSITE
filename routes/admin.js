@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require('fs')
 const multer = require('multer')
+const sentEmail = require("./sendEmail.js")
 require("dotenv").config();
 
 require("../db/config");
@@ -147,12 +148,45 @@ route.post("/sent-message",verifyToken,async(req,res)=>{
     let {user} = req.body.validation;
     if(req.body.validation.verified && user.Access=="admin"){
             const isoDate = (new Date()).toISOString().substring(0,10);//yyyy-mm-dd
+            let year = "";
+            let users = [];
+            if(req.body.year=="All"){
+                if(req.body.club_name=="All"){
+                    tempUsers = await userModel.find({isverified:true}); 
+                    for(let i=0;i<tempUsers.length;i++){
+                        users.push(tempUsers[i].ERP_ID);
+                    }
+                }else{
+                    let clubMembers = (await clubModel.findOne({name:req.body.club_name})).members;
+                    for(let i=0;i<clubMembers.length;i++){
+                        users.push((await userModel.find({_id:clubMembers[i].userId,isverified:true})).ERP_ID);
+                    }
+                }
+            }else{
+                if(req.body.club_name=="All"){
+                    tempUsers = await userModel.find({isverified:true,year:req.body.year});
+                    for(let i=0;i<tempUsers.length;i++){
+                        users.push(tempUsers[i].ERP_ID);
+                    }
+                }else{
+                    let clubMembers = (await clubModel.findOne({name:req.body.club_name})).members;
+                    // console.log(clubMembers);
+                    for(let i=0;i<clubMembers.length;i++){
+                        users.push((await userModel.findOne({_id:clubMembers[i].userId,isverified:true,year:req.body.year})).ERP_ID);
+                    }
+                }
+            }
+            // let users = await userModel.find({isverified:true,year});
             let newMessage = new messageModel({
                 title:req.body.title,
                 detail:req.body.message,
                 date:isoDate,
+                access:users,
             });
             await newMessage.save();
+            for(let i=0;i<users.length;i++){
+                await sentEmail(users[i]+"@niet.co.in","DSW-NIET: Notification",req.body.title);
+            }
             res.send({status:"Message Sent Succesfully:)"})
     }else{
         res.send({status:"Unauthorized access"});
