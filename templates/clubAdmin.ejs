@@ -7,8 +7,10 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 </head>
 <body>
-    <div id="clubDetail">
-        <button onclick="logout()" style="float:right;">Logout</button>
+    <button onclick="logout()" style="float: right;" class="btn1">Logout</button>
+    <div class="admin-page">
+    <div id="clubDetail" class="form">
+
         <div id="editButton" style="display: flex;">
             <button onclick="addClubMemberToggle()">+Add Member</button>
             <button onclick="editClubToggle()">Edit Club</button>
@@ -64,6 +66,7 @@
             <div>Events</div>
             <div id="clubEvents" style="display:flex;"></div>
         </div>
+    </div>
     </div>
 </body>
 <!-- Don't disturb arrangement of script  -->
