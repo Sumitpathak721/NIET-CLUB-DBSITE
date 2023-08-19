@@ -78,7 +78,27 @@
             <div id="message-container">
                 <h3 id="message-heading">Send Message to Community</h3>
                 <form action="./admin/sent-message" method="POST" id="sent-message">
+                    <div class="filter">
+                        <label for="club_name">Club Name:</label>
+                        <select name="club_name">
+                            <option value="All">All</option>
+                            <%for(let i=0;i<clubs.length;i++){%>
+                                <option value='<%=clubs[i].name%>'><%=clubs[i].name%></option>
+                            <%}%>
+                        </select>
+                        <label for="year">Year:</label>
+                        <select name="year">
+                            <option value="All">All</option>
+                            <option value="1">1st</option>
+                            <option value="2">2nd</option>
+                            <option value="3">3rd</option>
+                            <option value="4">4th</option>
+                            <option value="5">5th</option>
+                        </select>
+                    </div><br>
                     <input name="title" placeholder="Enter Title" required></input><br>
+                    
+                    <br>
                     <textarea name="message" placeholder="Type you messgae" required style="resize: none;"></textarea><br>
                     <button type="submit">Send</button>
                 </form>
