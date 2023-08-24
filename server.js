@@ -1,5 +1,6 @@
 const express=require("express");
 const ejs = require("ejs");
+require("dotenv").config();
 const bodyParser = require("body-parser");
 const path = require("path")
 require("./db/config.js");
@@ -91,6 +92,6 @@ app.use("/clubAdmin",require("./routes/clubAdmin.js"));
 
 
 
-app.listen(3001,()=>{
+app.listen(process.env.PORT|| 3001,()=>{
     console.log("Listening to port 3001")
 });
