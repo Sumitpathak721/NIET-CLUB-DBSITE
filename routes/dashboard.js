@@ -6,6 +6,7 @@ const eventModel = require("../db/events.js")
 const mainModel = require("../db/main.js")
 const route=express()
 
+
 route.get("/",async(req,res)=>{
     res.render(templatesLoc+"/dashboard.ejs");
 });

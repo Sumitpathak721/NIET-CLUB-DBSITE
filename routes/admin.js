@@ -10,7 +10,6 @@ const clubModel = require("../db/clubs")
 const mainModel = require("../db/main")
 const messageModel = require("../db/message");
 let {templatesLoc, verifyToken} = require("../server.js");
-const { runInNewContext } = require("vm");
 const path = require("path");
 
 const route=express()
