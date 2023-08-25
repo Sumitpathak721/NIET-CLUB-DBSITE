@@ -12,7 +12,7 @@ const app = express();
 
 //MiddleWare
 app.set("view engine","ejs");
-app.set("views",path.join(__dirname,"templates"))//configuring templates files to ejs extension
+app.set("views",path.join(__dirname,"views"))//configuring templates files to ejs extension
 app.use(express.static(path.join(__dirname,"./public")));//location of static file
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
