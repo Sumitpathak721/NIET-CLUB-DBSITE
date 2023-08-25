@@ -96,6 +96,7 @@ route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxC
 });
 //-----------Edit DSW club info API Start-----------
 route.put("/edit-dsw-info",upload.fields([{name:"DSWIcon",maxCount:1},{name:"video",maxCount:1}]),verifyToken,async(req,res)=>{
+    console.log("edit dsw info called");
     if(req.body.validation.user.Access!="admin"){
         res.send({status:"access Denied!!"})
         return;
