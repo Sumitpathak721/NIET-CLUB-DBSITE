@@ -54,7 +54,7 @@ const ShowClubMember = async (club) => {
             clubMember.innerHTML += `
             <div style='border:1px solid black;margin:1px 2px;display:flex;flex-direction:column;text-align:center;'>
                 <img src='${window.MAIN_DIR+res.member.avatar}' alt='${res.member.name}' style='height:100px;width:100px;border-radius:100%;'>
-                <a href='http://localhost:3000/profile/${res.member.ERP_ID}'>${res.member.name}</a>
+                <a href='${window.MAIN_DIR}/profile/${res.member.ERP_ID}'>${res.member.name}</a>
                 <button onclick='deleteMember("${res.member.ERP_ID}")'>Delete Member</button>
             </div>
             `
