@@ -3,7 +3,7 @@ require("dotenv").config();
 const fs = require('fs')
 const multer = require('multer')
 
-let {templatesLoc,verifyToken}  = require("../server");
+let {verifyToken}  = require("../server");
 require("../db/config.js");
 const userModel = require("../db/users");
 const clubModel = require("../db/clubs");

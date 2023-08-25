@@ -9,7 +9,7 @@ const userModel = require("../db/users")
 const clubModel = require("../db/clubs")
 const mainModel = require("../db/main")
 const messageModel = require("../db/message");
-let {templatesLoc, verifyToken} = require("../server.js");
+let {verifyToken} = require("../server.js");
 const path = require("path");
 
 const route=express()

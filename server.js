@@ -11,12 +11,12 @@ const userModel = require("./db/users.js");
 const app = express();
 
 //MiddleWare
-app.set("view engine","ejs");//configuring templates files to ejs extension
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"templates"))//configuring templates files to ejs extension
 app.use(express.static(path.join(__dirname,"./public")));//location of static file
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
-var templatesLoc = path.join(__dirname,"templates");
 
 
 const verifyToken = async(req, res, next) => {
@@ -48,7 +48,7 @@ const verifyToken = async(req, res, next) => {
 }
 
 app.get("/",async(req,res)=>{
-    res.render(templatesLoc+"/login.ejs");
+    res.render("./login.ejs");
 });
 
 app.post("/login",async(req,res)=>{
@@ -85,7 +85,7 @@ app.post("/login",async(req,res)=>{
 app.get("/validate",verifyToken,async(req,res)=>{
     res.send(req.body.validation);
 })
-module.exports = {templatesLoc,verifyToken};
+module.exports = {verifyToken};
 app.use("/dashboard",require("./routes/dashboard.js"));
 app.use('/admin',require("./routes/admin.js"));
 app.use("/clubAdmin",require("./routes/clubAdmin.js"));
