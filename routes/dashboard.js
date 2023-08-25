@@ -8,14 +8,11 @@ const route=express()
 
 
 route.get("/",async(req,res)=>{
-    res.render("../dashboard.ejs");
+    res.render("dashBoard.ejs");
 });
 
 route.get("/test",async(req,res)=>{
-    res.render("../views/admin.ejs");
-});
-route.get("/test2",async(req,res)=>{
-    res.render("../")
+    res.render("admin.ejs");
 });
 route.get("/getAccessData",verifyToken,async(req,res)=>{
     if(req.body.validation.verified){

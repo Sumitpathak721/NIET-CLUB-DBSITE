@@ -6,9 +6,6 @@ const path = require("path")
 require("./db/config.js");
 const jwt = require("jsonwebtoken");
 const userModel = require("./db/users.js");
-const clubModel = require("./db/clubs.js");
-const eventModel = require("./db/events.js");
-const mainModel = require("./db/main.js");
 
 
 const app = express();
@@ -89,40 +86,12 @@ app.get("/validate",verifyToken,async(req,res)=>{
     res.send(req.body.validation);
 })
 module.exports = {verifyToken};
-
-const route=express()
-
-route.get("/",async(req,res)=>{
-    res.render("dashboard.ejs");
-});
-
-route.get("/getAccessData",verifyToken,async(req,res)=>{
-    if(req.body.validation.verified){
-        if(req.body.validation.user.Access=="admin"){
-            let clubs = await clubModel.find({},{name:1});
-            let main = await mainModel.findOne({});
-            res.render("admin.ejs",{main:main,clubs:clubs,MAIN_DIR:process.env.MAIN_DIR});
-        }else if(req.body.validation.user.Access=="clubAdmin"){
-            let club = await clubModel.findOne({_id:req.body.validation.user.AccessID});
-            res.render("clubAdmin.ejs",{club:club,MAIN_DIR:process.env.MAIN_DIR});
-        }else{
-            res.sendStatus(403);
-        }
-    }else{
-        res.sendStatus(404);
-    }
-});
-route.get("/getEvent",async(req,res)=>{
-    let event = await eventModel.findOne({_id:req.query.clubID});
-    res.send(event);
-});
-
-app.use('/dashboard',route);
+app.use("/dashboard",require("./routes/dashboard.js"));
 app.use('/admin',require("./routes/admin.js"));
 app.use("/clubAdmin",require("./routes/clubAdmin.js"));
 
 
 
 app.listen(process.env.PORT|| 3001,()=>{
-    console.log("Listening...")
+    console.log("Listening to port 3001")
 });
