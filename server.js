@@ -6,6 +6,14 @@ const path = require("path")
 require("./db/config.js");
 const jwt = require("jsonwebtoken");
 const userModel = require("./db/users.js");
+const AWS = require('aws-sdk');
+
+AWS.config.update({
+    accessKeyId: process.env.accessKeyId,
+    secretAccessKey: process.env.secretAccessKey,
+})
+
+const s3 = new AWS.S3();
 
 
 const app = express();
@@ -84,11 +92,48 @@ app.post("/login",async(req,res)=>{
 });
 app.get("/validate",verifyToken,async(req,res)=>{
     res.send(req.body.validation);
+});
+
+app.get("/files/:key", async (req, res) => {
+    
+    var getParams = {
+        Bucket: 'niet-dsw',
+        Key: req.params.key
+    }
+    try {
+        // var data = await s3.getObject(getParams).promise();
+        var object = s3.getObject(getParams).createReadStream();
+        object.pipe(res);
+        return;
+
+    } catch (e) {
+        console.log("Error fetching object:", e);
+        return res.json({ error: "error occuur while fetching object" });
+    }
 })
-module.exports = {verifyToken};
+
+const unlinkFileStream = async(key)=>{
+    var params = {
+        Bucket:"niet-dsw",
+        Key:key
+    }
+    s3.deleteObject(params,(err,data)=>{
+        if(err){
+            console.log("Got error on deleting:",err);
+            return {status:400};
+        }else{
+            console.log("delete sucessfully:)");
+            return {status:200};
+        }
+    });
+}
+
+module.exports = {verifyToken,unlinkFileStream};
 app.use("/dashboard",require("./routes/dashboard.js"));
 app.use('/admin',require("./routes/admin.js"));
 app.use("/clubAdmin",require("./routes/clubAdmin.js"));
+
+
 
 
 

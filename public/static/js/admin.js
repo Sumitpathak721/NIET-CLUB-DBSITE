@@ -147,7 +147,7 @@ const newClubBtn = async () => {
     element.classList.toggle("activeClubBtn");
 }
 const checkClubAdmin = async (value) => {
-    let statusTag = $("#statusAdminValidateForm");
+    let statusTag = $("#statusAdminValidate");
     statusTag.text('validating Admin...');
 
     let data = await fetch("/clubAdmin/checkclubAdmin", {
