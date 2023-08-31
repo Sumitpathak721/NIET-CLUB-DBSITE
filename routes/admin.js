@@ -81,7 +81,7 @@ var upload = multer({
 // });
 
 
-route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxCount:1}]),verifyToken,async(req,res)=>{
+route.post("/addClub",upload.fields([{name:"icon",maxCount:1}]),verifyToken,async(req,res)=>{
     try{
     let admin = req.body.validation.user;
     if(admin && admin.Access=="admin"){
@@ -104,7 +104,6 @@ route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxC
                         number:req.body.number,
                         Email:req.body.Email,
                         icon:"/files/"+req.body.name+"-clubIcon",
-                        video:"/files/"+req.body.name+"-clubVideo",
                         event:[]
                     })
                     await newClub.members.push({userId:clubAdmin._id,position:"clubAdmin"});
