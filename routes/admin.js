@@ -1,6 +1,8 @@
 const express = require("express");
-const fs = require('fs')
+// const fs = require('fs')
 const multer = require('multer')
+const multerS3 = require("multer-s3");
+const AWS = require('aws-sdk');
 const sentEmail = require("./sendEmail.js")
 require("dotenv").config();
 
@@ -9,10 +11,16 @@ const userModel = require("../db/users")
 const clubModel = require("../db/clubs")
 const mainModel = require("../db/main")
 const messageModel = require("../db/message");
-let {templatesLoc, verifyToken} = require("../server.js");
-const path = require("path");
+let {verifyToken} = require("../server.js");
 
 const route=express()
+
+AWS.config.update({
+    accessKeyId: process.env.accessKeyId,
+    secretAccessKey: process.env.secretAccessKey,
+})
+
+
 
 route.post("/",async(req,res)=>{
     if(req.body.id){
@@ -28,42 +36,63 @@ route.post("/",async(req,res)=>{
     }
 });
 
+const s3 = new AWS.S3();
 
 var upload = multer({
-    storage:multer.diskStorage({
-        destination:(req,file,cb)=>{
-            if(file.mimetype.split("/")[0]=="video"){
-                cb(null,'public/dynamic/videos')
-            }
-            if(file.mimetype.split("/")[0]=="image"){
-                cb(null,"public/dynamic/images")
-            }
-        },
-        filename:(req,file,cb)=>{
+    
+    storage: multerS3({
+        s3: s3,
+        bucket: 'niet-dsw',
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        key: (req, file, cb) => {
             if(file.fieldname=="icon"){
-                cb(null,req.body.name+"-clubIcon.png")
+                cb(null,req.body.name+"-clubIcon")
             }else if(file.fieldname=='DSWIcon'){
-                cb(null,"DSW-"+Date.now()+"clubIcon.png")
+                cb(null,"DSW-clubIcon")
             }else if(file.fieldname=="video"){
-                    //for api edit-dsw-video
-                    cb(null,"DSW"+Date.now()+"-clubVideo.mp4")
+                cb(null,"DSW-clubVideo")
             }
-                
         }
     })
-});
+})
 
-route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxCount:1}]),verifyToken,async(req,res)=>{
+// var upload = multer({
+//     storage:multer.diskStorage({
+//         destination:(req,file,cb)=>{
+//             if(file.mimetype.split("/")[0]=="video"){
+//                 cb(null,'/')
+//             }
+//             if(file.mimetype.split("/")[0]=="image"){
+//                 cb(null,"public/dynamic/images")
+//             }
+//         },
+//         filename:(req,file,cb)=>{
+//             if(file.fieldname=="icon"){
+//                 cb(null,req.body.name+"-clubIcon.png")
+//             }else if(file.fieldname=='DSWIcon'){
+//                 cb(null,"DSW-"+Date.now()+"clubIcon.png")
+//             }else if(file.fieldname=="video"){
+//                     //for api edit-dsw-video
+//                     cb(null,"DSW"+Date.now()+"-clubVideo.mp4")
+//             }
+                
+//         }
+//     })
+// });
+
+
+route.post("/addClub",upload.fields([{name:"icon",maxCount:1}]),verifyToken,async(req,res)=>{
+    try{
     let admin = req.body.validation.user;
     if(admin && admin.Access=="admin"){
         let clubAdmin = await userModel.findOne({ERP_ID:req.body.ERP_ID});
         if(clubAdmin){
             if(clubAdmin.access=='clubAdmin' || clubAdmin.access=="admin"){
-                res.send({status:"Already clubAdmin"});
+                res.json({status:"Already clubAdmin"});
             }else{
                 let club = await userModel.findOne({name:req.body.name});
                 if(club && club.name==req.body.name){
-                    res.send({status:"Club Already Exist"});
+                    res.json({status:"Club Already Exist"});
                 }else{
                     let newClub =new clubModel({
                         name:req.body.name,
@@ -74,8 +103,7 @@ route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxC
                         members:[],
                         number:req.body.number,
                         Email:req.body.Email,
-                        icon:"/dynamic/images/"+req.body.name+"-clubIcon.png",
-                        video:"/dynamic/videos/"+req.body.name+"-clubVideo.mp4",
+                        icon:"/files/"+req.body.name+"-clubIcon",
                         event:[]
                     })
                     await newClub.members.push({userId:clubAdmin._id,position:"clubAdmin"});
@@ -83,7 +111,7 @@ route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxC
                     clubAdmin.accessID = newClub._id;
                     await clubAdmin.save();
                     await newClub.save();
-                    res.send({status:"ok"});
+                    res.json({status:"ok"});
                 }
             }
         }else{
@@ -91,6 +119,8 @@ route.post("/addClub",upload.fields([{name:"icon",maxCount:1},{name:"video",maxC
         }
     }else{
         res.redirect({status:"UnAuthorized"})
+    }}catch(e){
+        console.log("got error:",e);
     }
     
 });
@@ -107,22 +137,10 @@ route.put("/edit-dsw-info",upload.fields([{name:"DSWIcon",maxCount:1},{name:"vid
         main.helplineNo=[req.body.helplineNo1,req.body.helplineNo1];
         main.email=[req.body.email1,req.body.email2]
         if(req.files.DSWIcon){
-            fs.unlink(`${path.join("public",main.icon)}`,(e)=>{
-                if(e){
-                    console.log("File Deletion error:",e)
-                    return;
-                }
-            });
-            main.icon = "/dynamic/images/"+req.files.DSWIcon[0].filename;
+            main.icon = "/files/"+req.files.DSWIcon[0].filename;
         }
         if(req.files.video){
-            fs.unlink(`${path.join("public",main.video)}`,(e)=>{
-                if(e){
-                    console.log("File Deletion error:",e)
-                    return;
-                }
-            });
-            main.video = "/dynamic/videos/"+req.files.video[0].filename;
+            main.video = "/files/"+req.files.video[0].filename;
         }
         await main.save();
         res.send({status:"ok"})
@@ -132,8 +150,8 @@ route.put("/edit-dsw-info",upload.fields([{name:"DSWIcon",maxCount:1},{name:"vid
             desc2:req.body.desc2,
             helpLineNo:[req.body.helplineNo1,req.body.helplineNo1],
             email:[req.body.email1,req.body.email2],
-            icon:"/dynamic/images/"+req.files.DSWIcon[0].filename,
-            video:"/dynamic/video/"+req.files.video[0].filename,
+            icon:"/files/"+req.files.DSWIcon[0].filename,
+            video:"/files/"+req.files.video[0].filename,
         });
         await newMain.save();
         res.send({status:"ok"})

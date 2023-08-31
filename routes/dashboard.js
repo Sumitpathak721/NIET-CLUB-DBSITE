@@ -1,5 +1,5 @@
 const express = require("express");
-const {templatesLoc,verifyToken} = require("../server.js")
+const {verifyToken} = require("../server.js")
 require("../db/config.js");
 const clubModel = require("../db/clubs.js")
 const eventModel = require("../db/events.js")
@@ -8,18 +8,21 @@ const route=express()
 
 
 route.get("/",async(req,res)=>{
-    res.render(templatesLoc+"/dashboard.ejs");
+    res.render("dashBoard.ejs");
 });
 
+route.get("/test",async(req,res)=>{
+    res.render("admin.ejs");
+});
 route.get("/getAccessData",verifyToken,async(req,res)=>{
     if(req.body.validation.verified){
         if(req.body.validation.user.Access=="admin"){
             let clubs = await clubModel.find({},{name:1});
             let main = await mainModel.findOne({});
-            res.render(templatesLoc+"/admin.ejs",{main:main,clubs:clubs,MAIN_DIR:process.env.MAIN_DIR});
+            res.render("admin.ejs",{main:main,clubs:clubs,MAIN_DIR:process.env.MAIN_DIR});
         }else if(req.body.validation.user.Access=="clubAdmin"){
             let club = await clubModel.findOne({_id:req.body.validation.user.AccessID});
-            res.render(templatesLoc+"/clubAdmin.ejs",{club:club,MAIN_DIR:process.env.MAIN_DIR});
+            res.render("clubAdmin.ejs",{club:club,MAIN_DIR:process.env.MAIN_DIR});
         }else{
             res.sendStatus(403);
         }

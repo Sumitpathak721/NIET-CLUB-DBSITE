@@ -1,0 +1,26 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Edit you css here -->
+    <link rel="stylesheet" href="/static/css/login.css"> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" />
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body style=" height:100%;display:flex ; justify-content: center; align-items: center;" onload="onLoad()">
+    <section id="login form">
+
+        <!-- Login Form -->
+        <form name="form-login" onsubmit="login()" method="POST" id="login">
+            <input type="text" class="input" name="ERP_ID" placeholder="ERP_ID"><br>
+            <input type="password" class="input" name="password" placeholder="password"><br>
+            <button type="submit" class="submitbtn">Login</button>
+        </form>
+    </section>
+</body>
+
+
+<!-- javascript handle here -->
+<script src="/static/js/login.js"></script>

@@ -118,7 +118,7 @@ const ShowClubMember = async (club) => {
             clubMember.innerHTML += `
             <div class='clubMember'>
                 <img src='${window.MAIN_DIR+res.member.avatar}' alt='${res.member.name}'>
-                <a href='http://localhost:3000/profile/${res.member.ERP_ID}'>${res.member.name}</a>
+                <a href='${window.MAIN_DIR}/profile/${res.member.ERP_ID}'>${res.member.name}</a>
                 <button onclick='deleteMember("${res.member.ERP_ID}","${club._id}")'>Delete Member</button>
             </div>
             `
@@ -147,7 +147,7 @@ const newClubBtn = async () => {
     element.classList.toggle("activeClubBtn");
 }
 const checkClubAdmin = async (value) => {
-    let statusTag = $("#statusAdminValidateForm");
+    let statusTag = $("#statusAdminValidate");
     statusTag.text('validating Admin...');
 
     let data = await fetch("/clubAdmin/checkclubAdmin", {
