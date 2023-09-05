@@ -2,8 +2,10 @@ const route = require("express")()
 require("dotenv").config();
 const fs = require('fs')
 const multer = require('multer')
+const multerS3 = require("multer-s3");
+const AWS = require('aws-sdk');
 
-let {templatesLoc,verifyToken}  = require("../server");
+let {verifyToken,unlinkFileStream}  = require("../server");
 require("../db/config.js");
 const userModel = require("../db/users");
 const clubModel = require("../db/clubs");
@@ -126,20 +128,28 @@ route.post("/isMember",verifyToken,async(req,res)=>{
     }
 });
 // ----Edit club Api end---------------
+
+AWS.config.update({
+    accessKeyId: process.env.accessKeyId,
+    secretAccessKey: process.env.secretAccessKey,
+})
+const s3 = new AWS.S3();
+
 var upload = multer({
-    storage:multer.diskStorage({
-        destination:(req,file,cb)=>{
-            cb(null,'public/dynamic/images')
-        },
-        filename:(req,file,cb)=>{
+    storage: multerS3({
+        s3: s3,
+        bucket: 'niet-dsw',
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        key: (req, file, cb) => {
             if(file.fieldname=="icon"){
-                cb(null,req.body.name+(new Date()).getTime()+"-clubIcon.png")
+                cb(null,req.body.name+(new Date()).getTime()+"-clubIcon")
             }else if(file.fieldname=="eventIcon"){
-                cb(null,(new Date()).getTime()+"-clubEventIcon.png")
+                cb(null,(new Date()).getTime()+"-clubEventIcon")
             }
         }
     })
-});
+})
+
 route.post("/editClub",upload.single("icon"),verifyToken,async(req,res)=>{
     let admin = req.body.validation.user;
     if(admin){
@@ -178,18 +188,14 @@ route.post("/editClub",upload.single("icon"),verifyToken,async(req,res)=>{
                 res.send({status:"Invalid clubAdminID"})
             }
             if(req.file){
-                fs.unlink(""+path.join("public",club.icon),(e)=>{
-                    if(e){
-                        console.e("File Deletion error:",e)
-                        return;
-                    }
-                });
-                club.icon="/dynamic/images/"+req.file.filename;
+                var part = club.icon.split('/');
+                await unlinkFileStream(part[part.length-1]);
+                club.icon="/files/"+req.file.key;
             }
             await club.save();
             res.send({status:"ok"});
         }else{
-            res.send({status:"Invalid club"})
+            res.send({status:"Invalid club"});
         }
     }else{
         res.send({status:401});
@@ -212,7 +218,7 @@ route.post("/addClubEvent",upload.single("eventIcon"),verifyToken,async(req,res)
             let newEvent = new eventModel({
                 Name:req.body.eventName,
                 Desc:req.body.desc,
-                icon:"/dynamic/images/"+req.file.filename,  
+                icon:"/files/"+req.file.key,  
                 clubName:club.name,
                 Date:req.body.date,
             });
@@ -246,12 +252,8 @@ route.put("/deleteEvent",verifyToken,async(req,res)=>{
             if(event){
                 for(let i=0;i<club.events.length;i++){
                     if(`${club.events[i]}`== `${event._id}`){
-                        fs.unlink(""+path.join("public",event.icon),(e)=>{
-                            if(e){
-                                console.log("File Deletion error:",e)
-                                return;
-                            }
-                        });
+                        var part = event.icon.split('/');
+                        await unlinkFileStream(part[part.length-1]);
                         await eventModel.deleteOne({_id:club.events[i]});
                         club.events.splice(i,1);
                         await club.save()

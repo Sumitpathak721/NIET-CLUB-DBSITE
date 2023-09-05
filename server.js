@@ -1,21 +1,30 @@
 const express=require("express");
 const ejs = require("ejs");
+require("dotenv").config();
 const bodyParser = require("body-parser");
 const path = require("path")
 require("./db/config.js");
 const jwt = require("jsonwebtoken");
 const userModel = require("./db/users.js");
+const AWS = require('aws-sdk');
+
+AWS.config.update({
+    accessKeyId: process.env.accessKeyId,
+    secretAccessKey: process.env.secretAccessKey,
+})
+
+const s3 = new AWS.S3();
 
 
 const app = express();
 
 //MiddleWare
-app.set("view engine","ejs");//configuring templates files to ejs extension
+app.set("view engine","ejs");
+app.set("views",path.join(__dirname,"views"))//configuring templates files to ejs extension
 app.use(express.static(path.join(__dirname,"./public")));//location of static file
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
-var templatesLoc = path.join(__dirname,"templates");
 
 
 const verifyToken = async(req, res, next) => {
@@ -47,7 +56,7 @@ const verifyToken = async(req, res, next) => {
 }
 
 app.get("/",async(req,res)=>{
-    res.render(templatesLoc+"/login.ejs");
+    res.render("login.ejs");
 });
 
 app.post("/login",async(req,res)=>{
@@ -83,14 +92,51 @@ app.post("/login",async(req,res)=>{
 });
 app.get("/validate",verifyToken,async(req,res)=>{
     res.send(req.body.validation);
+});
+
+app.get("/files/:key", async (req, res) => {
+    
+    var getParams = {
+        Bucket: 'niet-dsw',
+        Key: req.params.key
+    }
+    try {
+        // var data = await s3.getObject(getParams).promise();
+        var object = s3.getObject(getParams).createReadStream();
+        object.pipe(res);
+        return;
+
+    } catch (e) {
+        console.log("Error fetching object:", e);
+        return res.json({ error: "error occuur while fetching object" });
+    }
 })
-module.exports = {templatesLoc,verifyToken};
+
+const unlinkFileStream = async(key)=>{
+    var params = {
+        Bucket:"niet-dsw",
+        Key:key
+    }
+    s3.deleteObject(params,(err,data)=>{
+        if(err){
+            console.log("Got error on deleting:",err);
+            return {status:400};
+        }else{
+            console.log("delete sucessfully:)");
+            return {status:200};
+        }
+    });
+}
+
+module.exports = {verifyToken,unlinkFileStream};
 app.use("/dashboard",require("./routes/dashboard.js"));
 app.use('/admin',require("./routes/admin.js"));
 app.use("/clubAdmin",require("./routes/clubAdmin.js"));
 
 
 
-app.listen(3001,()=>{
+
+
+app.listen(process.env.PORT|| 3001,()=>{
     console.log("Listening to port 3001")
 });
