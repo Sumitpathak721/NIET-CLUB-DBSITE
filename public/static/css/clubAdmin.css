@@ -7,8 +7,10 @@
 }
 .clubMember img{
     height:100px;
-    width:100px;
+    width: 40%;
     border-radius:100%;
+    display: flex;
+    margin: auto;
 }
 
 @import url(https://fonts.googleapis.com/css?family=Poppins:300);
