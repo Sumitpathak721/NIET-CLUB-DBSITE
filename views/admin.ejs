@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/admin.css">
     
 </head>
@@ -147,9 +148,18 @@
                     <input type="text" name="clubID" class="clubIDInput" style="display:none">
                     <input type="text"  name="eventName" placeholder="Event name" required><br>
                     <input type="text" name="desc" placeholder="Event Description" required><br>
-                    <input type="date" name="date" placeholder="Event organized date" required><br>
-                    <label for="icon">Event Icon:</label>
-                    <input type="file" name="eventIcon" required accept="image/*" multiple="false"><br>
+                    <div style="display: flex;">
+                        <label for="eventDate">Event Date:</label>
+                        <input type="date" name="eventDate" placeholder="Event organized date" required><br>
+                    </div>
+                    <div>
+                        <label for="regDate">Registration Date:</label>
+                        <input type="date" name="regDate" placeholder="Event Last Registration date" required><br>
+                    </div>
+                    <div style="display:flex;">
+                        <label for="icon">Event Icon:</label>
+                        <input type="file" name="eventIcon" required accept="image/*" multiple="false"><br>
+                    </div>
                     <button>Add Event</button>
 
                 </form>
@@ -173,7 +183,25 @@
                 <div id="clubEvents" style="display:flex;"></div>
             </div>
         </div>
-
+        <div id="popUp-background">
+            <!-- Report Submit Form -->
+            <div class="popUp-container">
+                <button class="remove-popUp" onclick="removePopupBg()"> 
+                    <i class="fa fa-remove"></i>
+                </button>
+                <form id="eventReportForm" action="/clubAdmin/addEventReport" method="POST" enctype="multipart/form-data" >
+                    <h1>Event Report</h1>
+                    <label for="eventPhotos">Event Photos(Max 5)</label>
+                    <input type="file" name="eventPhotos" multiple="true" accept="image/*">
+                    <br>
+                    <label for="eventPhotos">Event Report</label>
+                    <input type="file" name="eventReport" accept="application/pdf">
+                    <br>
+                    <input type="text" name="eventID" style="display:none" id="eventIDInput">
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 <script>

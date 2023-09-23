@@ -40,11 +40,21 @@
                 <button id="editClubBtn">Change</button>
             </form>
             <form action="/clubAdmin/addClubEvent" method="POST" id="addClubEventForm"  enctype="multipart/form-data" style="display: none;">
+                <input type="text" name="clubID" class="clubIDInput" style="display:none">
                 <input type="text"  name="eventName" placeholder="Event name" required><br>
                 <input type="text" name="desc" placeholder="Event Description" required><br>
-                <input type="date" name="date" placeholder="Event organized date" required><br>
-                <label for="icon">Event Icon:</label>
-                <input type="file" name="eventIcon" required accept="image/*" multiple="false"><br>
+                <div style="display: flex;">
+                    <label for="eventDate">Event Date:</label>
+                    <input type="date" name="eventDate" placeholder="Event organized date" required><br>
+                </div>
+                <div>
+                    <label for="regDate">Event Date:</label>
+                    <input type="date" name="regDate" placeholder="Event Last Registration date" required><br>
+                </div>
+                <div style="display:flex;">
+                    <label for="icon">Event Icon:</label>
+                    <input type="file" name="eventIcon" required accept="image/*" multiple="false"><br>
+                </div>
                 <button>Add Event</button>
 
             </form>
