@@ -183,4 +183,37 @@ body{
     width:fit-content;
     margin:10px 0px;
     padding:10px;
+}*/
+#popUp-background{
+  background-color:#00000080;
+  position:fixed;
+  height:100vh;
+  z-index:1;
+  width:100vw;
+  display:none;
+  top:0px;
+  left:0px;
+  justify-content: center;
+  align-items: center;
+}
+.remove-popUp{
+  float:right;
+  background-color:transparent;
+  border:1px solid black;
+  border-radius: 35px;
+  padding:5px;
+  font-size:15px;
+}
+.remove-popUp:hover{
+  background-color:black;
+  color:white;
+}
+.popUp-container{
+  background-color: white;
+  padding:10px;
+  border-radius:20px;
+  text-align: center;
+}
+.popUp-container form{
+  display: none;
 }

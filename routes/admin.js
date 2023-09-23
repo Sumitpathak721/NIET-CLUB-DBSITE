@@ -137,10 +137,10 @@ route.put("/edit-dsw-info",upload.fields([{name:"DSWIcon",maxCount:1},{name:"vid
         main.helplineNo=[req.body.helplineNo1,req.body.helplineNo1];
         main.email=[req.body.email1,req.body.email2]
         if(req.files.DSWIcon){
-            main.icon = "/files/"+req.files.DSWIcon[0].filename;
+            main.icon = "/files/"+req.files.DSWIcon[0].key;
         }
         if(req.files.video){
-            main.video = "/files/"+req.files.video[0].filename;
+            main.video = "/files/"+req.files.video[0].key;
         }
         await main.save();
         res.send({status:"ok"})
