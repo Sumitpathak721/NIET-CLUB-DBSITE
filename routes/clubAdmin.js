@@ -141,7 +141,6 @@ var upload = multer({
         bucket: 'niet-dsw',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         key: (req, file, cb) => {
-            console.log(file);
             if(file.fieldname=="icon"){
                 cb(null,req.body.name+(new Date()).getTime()+"-clubIcon")
             }else if(file.fieldname=="eventIcon"){
@@ -242,13 +241,18 @@ route.post("/addClubEvent",upload.single("eventIcon"),verifyToken,async(req,res)
         res.send({status:"Unauthorized access"});
     }
 });
-route.post("/addEventReport",upload.fields([{name:"eventPhotos",maxCount:5},{name:"eventReport",maxCount:1}]),verifyToken,async(req,res)=>{
+route.post("/addEventReport",upload.fields([{name:"eventPhotos",maxCount:6},{name:"eventReport",maxCount:1}]),verifyToken,async(req,res)=>{
     let admin = req.body.validation.user;
     if(admin){
         let event = await eventModel.findOne({_id:req.body.eventID})
         if(event){
             if(admin.Access=="admin"){
                 if(req.files.eventPhotos!=null){
+                    if(event.eventPhotos){
+                        for(let i=0;i<req.event.eventPhotos.length;i++){
+                            await unlinkFileStream(event.eventPhotos[i]);
+                        }   
+                    }
                     eventPhotos = [];
                     for(let i=0;i<req.files.eventPhotos.length;i++){
                         eventPhotos.push("/files/"+req.files.eventPhotos[i].key);
@@ -256,6 +260,9 @@ route.post("/addEventReport",upload.fields([{name:"eventPhotos",maxCount:5},{nam
                     event.eventPhotos = eventPhotos;
                 }
                 if(req.files.eventReport){
+                    if(event.report){
+                        await unlinkFileStream(event.report);
+                    }
                     event.report ="/files/"+ req.files.eventReport[0].key;
                 }
                 await event.save();
@@ -264,12 +271,20 @@ route.post("/addEventReport",upload.fields([{name:"eventPhotos",maxCount:5},{nam
                 let club = await clubModel.findOne({_id:admin.AccessID})
                 if(club.name==event.clubName){
                     if(req.files.eventPhotos!=null){
+                        if(event.eventPhotos){
+                            for(let i=0;i<req.event.eventPhotos.length;i++){
+                                await unlinkFileStream(event.eventPhotos[i]);
+                            }   
+                        }
                         for(let i=0;i<req.files.eventPhotos.length;i++){
                             event.eventPhotos.push("/files/"+req.files.eventPhotos[i].key);
                         }
                     }
                     
                     if(req.files.eventReport){
+                        if(event.report){
+                            await unlinkFileStream(event.report);
+                        }
                         event.report = "/files/"+req.files.eventReport[0].key;
                     }
                     await event.save();

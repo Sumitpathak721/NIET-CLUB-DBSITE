@@ -91,6 +91,7 @@ const ShowClubEvent = async (events) => {
         <div style='border:1px solid black;margin:1px 2px;display:flex;flex-direction:column;text-align:center;'>
             <img src='${response.icon}' alt='${response.Name}' style='height:100px;width:100px;border-radius:100%;'>
             <p>${response.Name}<br>${response.Date}</p>
+            <button onclick='reportForm("${response._id}")'>Update Report</button>
             <button onclick='deleteEvent("${response.Name}","${document.getElementById('clubName').innerHTML}")'>Delete Event</button>
         </div>
         `)
@@ -170,6 +171,19 @@ const addClubEventToggle = async()=>{
 }
 ///add functions to the form
 //for adding member form
+const reportForm = (eventID)=>{
+    $("#popUp-background").css("display","flex");
+    $("#eventReportForm").css("display","block");
+    $("#eventIDInput").attr("value",eventID);
+
+}
+const addReport = async (eventID) => {
+    document.getElementById("eventIDInput").value = eventID;
+    $("#eventReportForm").css("display",'block');
+}
+let removePopupBg = ()=>{
+    $("#popUp-background").css("display","none");
+}
 let addMemberForm = document.getElementById("addMemberForm");
 addMemberForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -212,6 +226,31 @@ editClubForm.addEventListener("submit", async (e) => {
     } else {
         alert(response.status);
     }
+});
+var eventReportForm = document.getElementById("eventReportForm");
+eventReportForm.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    $("#eventReportForm button").attr("disabled","true");
+    var formData = new FormData(eventReportForm);
+    var headers = new Headers();
+    headers.append("Authorization", localStorage.getItem("token"));
+    headers.append("Custom-Header", "custom-value");
+    let response = await fetch(eventReportForm.action, {
+        method: eventReportForm.method,
+        headers: headers,
+        body: formData
+    });
+    response = await response.json();
+    $("#eventReportForm button").attr("disabled","false");
+    console.log(response);
+    console.log(response.status);
+    if(response.status==='ok'){
+        alert("Report Submission successfully:)");
+        window.reload();
+    }else{
+        alert("Report Submission fail:(");
+    }
+    document.querySelector("#eventReportForm button").disabled = true;
 });
 var addClubEventForm = document.getElementById("addClubEventForm");
 addClubEventForm.addEventListener("submit", async (e) => {
